@@ -74,7 +74,9 @@ class ProductWidget extends StatelessWidget {
               Text(
                 product.title,
                 style: GoogleFonts.aBeeZee(
-                    fontSize: 12, fontWeight: FontWeight.bold),
+                    color: Colors.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
               const SizedBox(
                 height: 7,
@@ -85,7 +87,9 @@ class ProductWidget extends StatelessWidget {
                     TextSpan(
                       text: '\$ ${product.price}',
                       style: GoogleFonts.aBeeZee(
-                          fontSize: 14, fontWeight: FontWeight.bold),
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
                     ),
                     TextSpan(
                       text: ' (${product.discountPercentage}%)',

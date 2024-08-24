@@ -8,8 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../components/products/productDetails.dart';
 
-
-
 backArrow(BuildContext context) {
   return NeumorphicButton(
       onPressed: () {
@@ -467,7 +465,10 @@ orderCard(BuildContext context, Map product) {
                                       GoogleFonts.aBeeZee(color: Colors.grey),
                                 ),
                                 TextSpan(
-                                  text: (product['price'] * product['count'])
+                                  text: double.parse(
+                                          (product['price'] * product['count'])
+                                              .toString())
+                                      .toStringAsFixed(1)
                                       .toString(), // Different style
                                   style: GoogleFonts.aBeeZee(
                                       fontWeight: FontWeight.bold,
