@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecommerce1/components/purchase/cartPage.dart';
 import 'package:ecommerce1/services/authService.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,10 @@ class ProductServices {
         .doc(product.id.toString())
         .set(map)
         .then((value) {
-      Navigator.pushReplacementNamed(context, '/cart');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CartPage(showBackbutton: true)));
     });
   }
 
@@ -32,13 +36,12 @@ class ProductServices {
       BuildContext context, int count, String id) async {
     bool status = false;
     try {
-      await FirebaseFirestore.instance.collection('users').doc(uuid)
+      FirebaseFirestore.instance.collection('users').doc(uuid)
         ..collection("cart").doc(id).update({
           "count": count,
         }).then((value) {
-          print("value updated");
+          status = true;
         });
-      status = true;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error updating field: ${e.toString()}')),
@@ -87,5 +90,4 @@ class ProductServices {
     print(exist);
     return exist;
   }
-  
 }

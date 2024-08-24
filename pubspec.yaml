@@ -48,6 +48,8 @@ dependencies:
   shimmer: ^3.0.0
   shared_preferences: 
   like_button: ^2.0.5
+  toast: ^0.3.0
+  intl: 
   
  
 

@@ -23,7 +23,7 @@ class PriceNotifier extends StateNotifier<double> {
       double totalPrice = 0.0;
 
       for (var doc in snapshots.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final count = data['count'] ?? 0;
         final price = data['price'] ?? 0.0;
 

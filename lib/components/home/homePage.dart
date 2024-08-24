@@ -1,17 +1,15 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce1/Pages/subpage.dart';
+
 import 'package:ecommerce1/commonwidget/Loader.dart';
 import 'package:ecommerce1/commonwidget/allWidgets.dart';
 import 'package:ecommerce1/commonwidget/productWidget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:banner_carousel/banner_carousel.dart';
 
-import '../services/services.dart';
+import '../../services/services.dart';
+import '../products/subpage.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -39,6 +37,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     "https://firebasestorage.googleapis.com/v0/b/ecommerce-c93b3.appspot.com/o/topcollections%2FFrame%2033170.png?alt=media&token=3908a270-3da3-4692-854f-9dd7c9b90252"
   ];
   bool loading = false;
+  @override
   void initState() {
     super.initState();
     getData();
@@ -49,7 +48,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   int selectedIndex = 0;
-  int _bottomNavIndex = 0;
+  final int _bottomNavIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +62,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           toolbarHeight: 75,
           centerTitle: true,
           automaticallyImplyLeading: false,
+          surfaceTintColor: Colors.transparent,
           flexibleSpace: const Padding(
-            padding: EdgeInsets.only(left: 30.0, top: 25),
+            padding: EdgeInsets.only(left: 30.0, top: 0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Icon(Icons.sort),
@@ -210,6 +210,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 15),
                       height: 240,
+                      width: double.infinity,
                       child: productAsyncValue.when(
                         data: (products) => ListView.builder(
                             shrinkWrap: true,
@@ -227,7 +228,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                               );
                             }),
-                        loading: () => const CircularProgressIndicator(),
+                        loading: () => Container(
+                            child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        )),
                         error: (err, stack) => Text('Error: $err'),
                       ),
                     ),
@@ -235,7 +247,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       height: 20,
                     ),
                     Container(
-                      color: Color(0xffF8F8FA),
+                      color: const Color(0xffF8F8FA),
                       width: double.infinity,
                       height: 120,
                       child: CachedNetworkImage(
@@ -280,14 +292,25 @@ class _HomePageState extends ConsumerState<HomePage> {
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return recommenedProductWidget(items[index]);
+                              return recommenedProductWidget(
+                                  items[index], context);
                             }),
-                        loading: () => CircularProgressIndicator(),
+                        loading: () => const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 30,
+                              height: 30,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
+                        ),
                         error: (err, stack) => Text('Error: $err'),
                       ),
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

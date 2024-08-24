@@ -1,3 +1,3 @@
-final PREF_USER_CRED = 'user_cred';
-final PREF_EMAIL = 'email';
-final PREF_PASS = 'pass';
+const PREF_USER_CRED = 'user_cred';
+const PREF_EMAIL = 'email';
+const PREF_PASS = 'pass';

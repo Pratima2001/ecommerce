@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce1/Pages/homePage.dart';
 import 'package:ecommerce1/commonwidget/allWidgets.dart';
 import 'package:ecommerce1/services/authService.dart';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'login.dart';
@@ -23,6 +20,7 @@ class _SignupState extends State<Signup> {
   TextEditingController password = TextEditingController();
   TextEditingController conPass = TextEditingController();
   bool loading = false;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,57 +57,84 @@ class _SignupState extends State<Signup> {
                 const SizedBox(
                   height: 20,
                 ),
-                TextField(
-                  controller: name,
-                  style: GoogleFonts.aBeeZee(),
-                  decoration: const InputDecoration(
-                      hintText: "Enter your name",
-                      border: UnderlineInputBorder()),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextField(
-                  controller: email,
-                  style: GoogleFonts.aBeeZee(),
-                  decoration: const InputDecoration(
-                      hintText: "Email address",
-                      border: UnderlineInputBorder()),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextField(
-                  controller: password,
-                  style: GoogleFonts.roboto(),
-                  decoration: InputDecoration(
-                      hintStyle: GoogleFonts.aBeeZee(),
-                      hintText: "Passsword",
-                      border: const UnderlineInputBorder()),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                TextField(
-                  controller: conPass,
-                  style: GoogleFonts.roboto(),
-                  decoration: InputDecoration(
-                      hintStyle: GoogleFonts.aBeeZee(),
-                      hintText: "Confirm Passsword",
-                      border: const UnderlineInputBorder()),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: name,
+                        style: GoogleFonts.aBeeZee(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                            hintText: "Enter your name",
+                            border: UnderlineInputBorder()),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: email,
+                        style: GoogleFonts.aBeeZee(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter email';
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                            hintText: "Email address",
+                            border: UnderlineInputBorder()),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        controller: password,
+                        style: GoogleFonts.roboto(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter Password';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.aBeeZee(),
+                            hintText: "Passsword",
+                            border: const UnderlineInputBorder()),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: conPass,
+                        style: GoogleFonts.roboto(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please confirm password';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.aBeeZee(),
+                            hintText: "Confirm Passsword",
+                            border: const UnderlineInputBorder()),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 30,
                 ),
                 Align(
                   alignment: Alignment.center,
-                  child: MaterialButton(
-                      height: 40,
-                      minWidth: 100,
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(40)),
-                      color: const Color(0xff2D201C),
-                      onPressed: () async {
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
                         setState(() {
                           loading = true;
                         });
@@ -117,33 +142,41 @@ class _SignupState extends State<Signup> {
                             email.text.isNotEmpty) {
                           String uuid = await createAccount(
                               email.text, password.text, context);
-                          setState(() {
-                            loading = true;
-                          });
+                          if (uuid.isEmpty) {
+                            setState(() {
+                              loading = false;
+                            });
+                          }
                         }
-                      },
-                      child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: loading
-                              ? const SizedBox(
-                                  key: ValueKey('loading'),
-                                  width:
-                                      25, // Set width of the progress indicator
-                                  height: 25,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(3),
-                                    child: CircularProgressIndicator(
-                                      strokeWidth:
-                                          2, // Optional: Set thickness of the progress indicator
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                )
-                              : Text(
-                                  "SIGN UP",
-                                  style:
-                                      GoogleFonts.aBeeZee(color: Colors.white),
-                                ))),
+                      }
+                    },
+                    child: AnimatedContainer(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      duration: const Duration(seconds: 1),
+                      width: loading ? 60.0 : 200.0, // Adjust width
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      alignment: Alignment.center,
+                      child: loading
+                          ? const SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Sing Up',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16.0),
+                            ),
+                    ),
+                  ),
                 ),
                 Align(
                   alignment: Alignment.center,
@@ -167,7 +200,7 @@ class _SignupState extends State<Signup> {
                             border: Border.all(color: Colors.grey)),
                         child: CachedNetworkImage(
                             width: 15,
-                            height: 15,
+                            height: 10,
                             scale: 1.0,
                             imageUrl:
                                 'https://firebasestorage.googleapis.com/v0/b/ecommerce-c93b3.appspot.com/o/assets%2FApple.png?alt=media&token=641e949f-b237-44ed-8057-4d1010f600c7'),
@@ -181,7 +214,7 @@ class _SignupState extends State<Signup> {
                             border: Border.all(color: Colors.grey)),
                         child: CachedNetworkImage(
                             width: 15,
-                            height: 15,
+                            height: 10,
                             scale: 1.0,
                             imageUrl:
                                 'https://firebasestorage.googleapis.com/v0/b/ecommerce-c93b3.appspot.com/o/assets%2FGoogle.png?alt=media&token=1fcd0e6c-ebbc-4b9d-830a-4f88a34c2d04'),
@@ -195,7 +228,7 @@ class _SignupState extends State<Signup> {
                             border: Border.all(color: Colors.grey)),
                         child: CachedNetworkImage(
                             width: 15,
-                            height: 15,
+                            height: 10,
                             scale: 1.0,
                             imageUrl:
                                 'https://firebasestorage.googleapis.com/v0/b/ecommerce-c93b3.appspot.com/o/assets%2Ffacebook.png?alt=media&token=5b9fa041-3361-40b2-bf15-739c07920602'),
@@ -207,8 +240,8 @@ class _SignupState extends State<Signup> {
                     alignment: Alignment.center,
                     child: TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => Login()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const Login()));
                         },
                         child: Text(
                           "Already have an account? Log In",

@@ -33,7 +33,7 @@ class ExpansionTileCard extends StatefulWidget {
   /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
   /// be non-null.
   const ExpansionTileCard({
-    Key? key,
+    super.key,
     this.leading,
     required this.title,
     this.subtitle,
@@ -62,7 +62,7 @@ class ExpansionTileCard extends StatefulWidget {
     this.dense = false,
     this.height = 50,
     this.visualDensity = false,
-  }) : super(key: key);
+  });
 
   final bool isThreeLine;
   final bool dense;
@@ -269,8 +269,9 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
         }
         PageStorage.of(context).writeState(context, _isExpanded);
       });
-      if (widget.onExpansionChanged != null)
+      if (widget.onExpansionChanged != null) {
         widget.onExpansionChanged!(_isExpanded);
+      }
     }
   }
 
@@ -292,7 +293,7 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(
+          SizedBox(
             height: widget.height.toDouble(),
             child: InkWell(
               customBorder: RoundedRectangleBorder(
@@ -304,8 +305,8 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
                 textColor: _headerColor.value,
                 child: ListTile(
                   visualDensity: widget.visualDensity
-                      ? VisualDensity(vertical: -4.0, horizontal: -4.0)
-                      : VisualDensity(vertical: 0.0, horizontal: 0.0),
+                      ? const VisualDensity(vertical: -4.0, horizontal: -4.0)
+                      : const VisualDensity(vertical: 0.0, horizontal: 0.0),
                   dense: widget.dense,
                   tileColor: widget.baseColor,
                   isThreeLine: widget.isThreeLine,
@@ -317,9 +318,9 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
                   trailing: RotationTransition(
                     turns: widget.trailing == null || widget.animateTrailing
                         ? _iconTurns
-                        : AlwaysStoppedAnimation(0),
+                        : const AlwaysStoppedAnimation(0),
                     child: widget.trailing ??
-                        Icon(
+                        const Icon(
                           Icons.expand_more,
                         ),
                   ),
@@ -329,7 +330,7 @@ class ExpansionTileCardState extends State<ExpansionTileCard>
           ),
           ClipRect(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               color: widget.expandedColor,
               child: Align(
                 heightFactor: _heightFactor.value,

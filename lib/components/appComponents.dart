@@ -1,9 +1,9 @@
-import 'package:ecommerce1/Pages/Purchase/cartPage.dart';
-import 'package:ecommerce1/Pages/favouriteProducts.dart';
-import 'package:ecommerce1/Pages/homePage.dart';
-import 'package:ecommerce1/Pages/profileScreen.dart';
-import 'package:ecommerce1/Pages/subpage.dart';
 import 'package:flutter/material.dart';
+import 'home/favouriteProducts.dart';
+import 'home/homePage.dart';
+import 'home/myOrders.dart';
+import 'products/subpage.dart';
+import 'purchase/cartPage.dart';
 
 class AppComponent extends StatefulWidget {
   const AppComponent({super.key});
@@ -19,11 +19,11 @@ class _AppComponentState extends State<AppComponent> {
     SearchProducts(
       showAllProducts: true,
     ),
-    FavouriteProducts(),
+    const FavouriteProducts(),
     CartPage(
       showBackbutton: false,
     ),
-    ProfilePage()
+    const MyOrders()
   ];
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,8 @@ class _AppComponentState extends State<AppComponent> {
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.shopping_bag), label: "Cart"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.production_quantity_limits), label: "My orders"),
         ],
       ),
     ));

@@ -40,11 +40,18 @@ Future<List<MainCategory>> getallCategories() async {
     int id = 0;
     for (String prod in list) {
       id += 1;
-      categories.add(MainCategory(
-        id: id,
-        name: prod,
-        image: 'https://i.imgur.com/QkIa5tT.jpeg',
-      ));
+      String url = "https://dummyjson.com/products/category/$prod";
+
+      final catRes = await dio.get(url);
+
+      if (catRes.statusCode == 200) {
+        List data = catRes.data['products'];
+        categories.add(MainCategory(
+          id: id,
+          name: "${prod[0].toUpperCase()}${prod.substring(1).toLowerCase()}",
+          image: Product.fromMap(data[0]).images[0].toString(),
+        ));
+      }
     }
   }
   return categories;
@@ -94,7 +101,7 @@ Future<List<Product>> getrecommandedProducts() async {
 Future<List<Product>> getallProductsByCatgory(String category) async {
   List<Product> products = [];
   final dio = Dio();
-  String url = "https://dummyjson.com/products/category/${category}";
+  String url = "https://dummyjson.com/products/category/$category";
 
   final Response = await dio.get(url);
 
@@ -111,7 +118,7 @@ Future<List<Product>> getallProductsByCatgory(String category) async {
 Future<List<Product>> getSearchResult(String query) async {
   List<Product> products = [];
   final dio = Dio();
-  String url = "https://dummyjson.com/products/search?q=${query}";
+  String url = "https://dummyjson.com/products/search?q=$query";
 
   final Response = await dio.get(url);
 
@@ -124,5 +131,3 @@ Future<List<Product>> getSearchResult(String query) async {
 
   return products;
 }
-
-

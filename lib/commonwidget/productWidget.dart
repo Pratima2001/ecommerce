@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce1/Pages/ProductDetails.dart';
+
 import 'package:ecommerce1/data/models/productModule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../components/products/productDetails.dart';
 import 'likeButton.dart';
 
 // ignore: must_be_immutable
@@ -60,16 +60,9 @@ class ProductWidget extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 5, right: 5),
-                        child: NeumorphicButton(
-                            onPressed: () {},
-                            style: const NeumorphicStyle(
-                              shape: NeumorphicShape.flat,
-                              boxShape: NeumorphicBoxShape.circle(),
-                            ),
-                            padding: const EdgeInsets.all(7.0),
-                            child: LikeButton(
-                              product: product,
-                            )),
+                        child: LikeButton(
+                          product: product,
+                        ),
                       ),
                     ),
                   ]
@@ -92,9 +85,7 @@ class ProductWidget extends StatelessWidget {
                     TextSpan(
                       text: '\$ ${product.price}',
                       style: GoogleFonts.aBeeZee(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          fontSize: 14, fontWeight: FontWeight.bold),
                     ),
                     TextSpan(
                       text: ' (${product.discountPercentage}%)',

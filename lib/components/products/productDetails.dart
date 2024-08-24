@@ -3,19 +3,15 @@ import 'package:ecommerce1/commonwidget/allWidgets.dart';
 import 'package:ecommerce1/data/models/productModule.dart';
 import 'package:ecommerce1/services/userService.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../commonwidget/likeButton.dart';
-import '../commonwidget/productWidget.dart';
-import '../commonwidget/reviewWidget.dart';
-import '../services/services.dart';
+import '../../commonwidget/likeButton.dart';
+import '../../commonwidget/productWidget.dart';
+import '../../commonwidget/reviewWidget.dart';
+import '../../services/services.dart';
 
 // ignore: must_be_immutable
 class ProductDetails extends ConsumerStatefulWidget {
@@ -29,9 +25,9 @@ class ProductDetails extends ConsumerStatefulWidget {
 class _ProductDetailsState extends ConsumerState<ProductDetails> {
   ProductServices productServices = ProductServices();
   List<Color> colors = [
-    Color(0xffE7C0A7),
-    Color(0xff050302),
-    Color(0xffEE6969)
+    const Color(0xffE7C0A7),
+    const Color(0xff050302),
+    const Color(0xffEE6969)
   ];
   List sizes = ['S', 'M', 'L'];
   String selectedSize = 'S';
@@ -97,6 +93,7 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 40),
                           decoration: BoxDecoration(
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black
@@ -108,7 +105,6 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                                       0, 3), // Shadow position (dx, dy)
                                 ),
                               ],
-                              color: Colors.white,
                               borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(30),
                                   topRight: Radius.circular(30))),
@@ -185,9 +181,8 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                                         Text(
                                           "Color",
                                           style: GoogleFonts.aBeeZee(
-                                              fontSize: 18,
-                                              color: Colors.black
-                                                  .withOpacity(0.7)),
+                                            fontSize: 18,
+                                          ),
                                         ),
                                         SizedBox(
                                             height: 50,
@@ -272,13 +267,10 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Size",
-                                          style: GoogleFonts.aBeeZee(
+                                        Text("Size",
+                                            style: GoogleFonts.aBeeZee(
                                               fontSize: 18,
-                                              color: Colors.black
-                                                  .withOpacity(0.7)),
-                                        ),
+                                            )),
                                         SizedBox(
                                             height: 50,
                                             child: ListView.builder(
@@ -514,8 +506,8 @@ class _ProductDetailsState extends ConsumerState<ProductDetails> {
                                           itemBuilder: (context, index) {
                                             return Container(
                                               width: 150,
-                                              margin:
-                                                  EdgeInsets.only(right: 15),
+                                              margin: const EdgeInsets.only(
+                                                  right: 15),
                                               child: ProductWidget(
                                                 product: products[index],
                                                 showLike: false,

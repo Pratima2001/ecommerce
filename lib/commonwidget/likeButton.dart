@@ -1,5 +1,4 @@
 import 'package:ecommerce1/services/userService.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 
 import '../data/models/productModule.dart';
@@ -39,7 +38,7 @@ class _LikeButtonState extends State<LikeButton>
         ColorTween(begin: Colors.grey, end: const Color(0xffFF6E6E)).animate(
       CurvedAnimation(parent: _animationController!, curve: Curves.easeInOut),
     );
-    getLike();
+    if (mounted) getLike();
   }
 
   getLike() async {
@@ -55,6 +54,11 @@ class _LikeButtonState extends State<LikeButton>
   }
 
   void _toggleLike() {
+    if (!_isLiked) {
+      productServices.addProductsInLike(widget.product);
+    } else {
+      productServices.removeProductFromLike(widget.product);
+    }
     setState(() {
       _isLiked = !_isLiked;
       if (_isLiked) {
@@ -63,11 +67,7 @@ class _LikeButtonState extends State<LikeButton>
         _animationController?.reverse();
       }
     });
-    if (_isLiked) {
-      productServices.addProductsInLike(widget.product);
-    } else {
-      productServices.removeProductFromLike(widget.product);
-    }
+    print("toggle");
   }
 
   @override
@@ -79,8 +79,15 @@ class _LikeButtonState extends State<LikeButton>
           boxShape: NeumorphicBoxShape.circle(),
         ),
         padding: const EdgeInsets.all(7.0),
-        child: GestureDetector(
-          onTap: _toggleLike,
+        child: NeumorphicButton(
+          onPressed: () {
+            _toggleLike();
+          },
+          style: const NeumorphicStyle(
+            shape: NeumorphicShape.flat,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(7.0),
           child: Transform.scale(
             scale: _scaleAnimation?.value ?? 1.0,
             child: Icon(

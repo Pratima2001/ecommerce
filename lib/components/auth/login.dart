@@ -1,13 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce1/utils/constants.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Pages/homePage.dart';
-import '../services/authService.dart';
+import '../../services/authService.dart';
 import 'signup.dart';
 
 class Login extends StatefulWidget {
@@ -21,7 +18,8 @@ class _LoginState extends State<Login> {
   TextEditingController email = TextEditingController();
   TextEditingController pass = TextEditingController();
   late SharedPreferences preferences;
-
+  bool loading = false;
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     getData();
@@ -38,8 +36,11 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(body: login(false)),
+    return PopScope(
+      canPop: false,
+      child: SafeArea(
+        child: Scaffold(body: login(false)),
+      ),
     );
   }
 
@@ -62,44 +63,96 @@ class _LoginState extends State<Login> {
               const SizedBox(
                 height: 30,
               ),
-              TextField(
-                style: GoogleFonts.aBeeZee(),
-                controller: email,
-                decoration: const InputDecoration(
-                    hintText: "Email address", border: UnderlineInputBorder()),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              TextField(
-                controller: pass,
-                style: GoogleFonts.roboto(),
-                decoration: InputDecoration(
-                    hintStyle: GoogleFonts.aBeeZee(),
-                    hintText: "Passsword",
-                    border: const UnderlineInputBorder()),
-              ),
-              const SizedBox(
-                height: 15,
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      style: GoogleFonts.aBeeZee(),
+                      controller: email,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                          hintText: "Email address",
+                          border: UnderlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      controller: pass,
+                      style: GoogleFonts.roboto(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter password';
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                          hintStyle: GoogleFonts.aBeeZee(),
+                          hintText: "Passsword",
+                          border: const UnderlineInputBorder()),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 30,
               ),
               Align(
                   alignment: Alignment.center,
-                  child: FilledButton(
-                      style: const ButtonStyle(
-                          backgroundColor:
-                              MaterialStatePropertyAll(Color(0xff2D201C))),
-                      onPressed: () {
-                        if (email.text.isNotEmpty && pass.text.isNotEmpty) {
-                          preferences.setBool(PREF_USER_CRED, true);
-                          preferences.setString(PREF_EMAIL, email.text);
-                          preferences.setString(PREF_PASS, pass.text);
-                          loginUser(email.text, pass.text, context);
-                        }
-                      },
-                      child: const Text("LOG IN"))),
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          loading = true;
+                        });
+                        preferences.setBool(PREF_USER_CRED, true);
+                        preferences.setString(
+                            PREF_EMAIL, email.text.toString());
+                        preferences.setString(PREF_PASS, pass.text);
+                        bool loggedIn =
+                            await loginUser(email.text, pass.text, context);
+                        if (!loggedIn)
+                          setState(() {
+                            loading = false;
+                          });
+                      }
+                    },
+                    child: AnimatedContainer(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      duration: const Duration(seconds: 1),
+                      width: loading ? 60.0 : 200.0, // Adjust width
+                      height: 50.0,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      alignment: Alignment.center,
+                      child: loading
+                          ? const SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text(
+                              'Log In',
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 16.0),
+                            ),
+                    ),
+                  )),
               Align(
                 alignment: Alignment.center,
                 child: Text(
@@ -158,19 +211,19 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Align(
                   alignment: Alignment.center,
                   child: TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Signup()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const Signup()));
                       },
                       child: Text(
                         "Don't have an account? Sign Up",
-                        style: GoogleFonts.aBeeZee(color: Colors.black),
+                        style: GoogleFonts.aBeeZee(),
                       )))
             ],
           ),
